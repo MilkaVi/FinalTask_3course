@@ -784,21 +784,21 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <StartupTime>1607087107</StartupTime>
+      <StartupTime>1607761780</StartupTime>
     </root>
     <database id="2" parent="1" name="TEST_BD">
       <ObjectId>16415</ObjectId>
       <Owner>root</Owner>
-      <IntrospectionStateNumber>1424</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1452</IntrospectionStateNumber>
       <Current>1</Current>
       <Relations>sequence|table|32969|32963|13
 sequence|table|32939|32941|1
 sequence|table|24770|24772|1
-sequence|table|24759|24761|1
 sequence|table|32992|32994|1
 sequence|table|32951|32953|1
 sequence|table|32981|32983|1
 sequence|table|33004|33006|1
+sequence|table|24759|24761|1
 sequence|table|33018|33020|1
 sequence|table|33031|33033|1
 </Relations>
@@ -869,7 +869,7 @@ sequence|table|33031|33033|1
       <Comment>standard public schema</Comment>
       <StateNumber>287</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>1425</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1453</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <access-method id="18" parent="2" name="heap">
@@ -1002,7 +1002,7 @@ sequence|table|33031|33033|1
     <sequence id="40" parent="17" name="usr_id_seq">
       <ObjectId>24759</ObjectId>
       <Owner>root</Owner>
-      <StateNumber>782</StateNumber>
+      <StateNumber>1451</StateNumber>
       <DataType>integer|0s</DataType>
     </sequence>
     <table id="41" parent="17" name="course">

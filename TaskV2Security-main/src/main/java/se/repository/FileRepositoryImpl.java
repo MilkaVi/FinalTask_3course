@@ -99,7 +99,7 @@ public class FileRepositoryImpl implements FileRepository {
         if(user_id != 0)
             sql.append("where file_user = ").append(user_id + " ");
 
-        switch (field){
+        switch (field.trim()){
             case "Files id":
                 sql.append("order by user_id");
                 break;
@@ -110,7 +110,6 @@ public class FileRepositoryImpl implements FileRepository {
                 sql.append("order by date");
                 break;
             }
-        System.out.println("999" + sql);
         files.addAll(jdbcTemplate.query(sql.toString(), new FileMapping()));
         return files;
     }

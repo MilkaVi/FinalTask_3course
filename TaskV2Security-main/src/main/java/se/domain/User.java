@@ -11,11 +11,11 @@ public class User {
     private Integer id = 0;
 
     @NotBlank
-    @Size(min=1,message = "min 1 characters")
+    @Size(min=1,message = "min 2 characters")
     private String login;
 
     @NotBlank
-    @Size(min=1,message = "min 1 characters")
+    @Size(min=1,message = "min 2 characters")
     private String password;
     private String role;
 

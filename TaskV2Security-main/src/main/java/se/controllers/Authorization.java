@@ -19,7 +19,6 @@ import javax.validation.Valid;
 
 @Controller
 public class Authorization {
-    static FileService fileRepository = new FileServiceImpl();
     static UserRepository users = new UserRepositoryImpl();
 
     @Autowired
@@ -28,8 +27,6 @@ public class Authorization {
     @PostMapping("/login_success_handler")
     public String loginSuccessHandler(@RequestBody @Valid User user,
                                               Model model) {
-
-        System.out.println("inter login_success");
 
         User userEntity = null;
         try {
@@ -97,9 +94,6 @@ public class Authorization {
             return "registration";
         }
 
-        System.out.println(user.getPassword());
-        System.out.println(bCryptPasswordEncoder.encode(user.getPassword()).toString());
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         users.save(user);
 
         return "redirect:/files";

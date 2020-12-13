@@ -44,7 +44,6 @@ public class Controller {
 
     @GetMapping("/files")
     public String getOrderPage(Model model) {
-        System.out.println("зашел!");
         return distribute(model);
     }
 
@@ -75,7 +74,7 @@ public class Controller {
     @GetMapping("/files/{files_id}/edit")
     public String edit(@PathVariable("files_id") Integer id,
                        Model model) {
-        if (userService.getUserByUsername(getCurrentUsername()).getRole().equals("ROLE_ADMIN") ||
+        if (userService.getUserByUsername(getCurrentUsername()).getRole().equals("ADMIN") ||
                 userService.getUserByUsername(getCurrentUsername()).getId() == fileRepository.getById(id).getFile_user()) {
             model.addAttribute("doc", fileRepository.getById(id));
             return "update";
@@ -88,7 +87,7 @@ public class Controller {
     public String update(@RequestBody @Valid File file,
                          Errors errors, @PathVariable("id") int id,
                          Model model) {
-        if (userService.getUserByUsername(getCurrentUsername()).getRole().equals("ROLE_USER") && userService.getUserByUsername(getCurrentUsername()).getId() != fileRepository.getById(id).getFile_user()) {
+         if (userService.getUserByUsername(getCurrentUsername()).getId() != fileRepository.getById(id).getFile_user()) {
 
             return "403";
         }
@@ -112,9 +111,7 @@ public class Controller {
 
             return "403";
         }
-
                 fileRepository.delete(id);
-
         return "redirect:/files";
 
     }
@@ -123,7 +120,7 @@ public class Controller {
     public String getOrderFilter( @RequestBody File file,
                                Model model) {
         int user_id = userService.getUserByUsername(getCurrentUsername()).getId();
-        if (userService.getUserByUsername(getCurrentUsername()).getRole().equals("ROLE_USER")) {
+        if (userService.getUserByUsername(getCurrentUsername()).getRole().equals("USER")) {
             model.addAttribute("files", fileRepository.select(0, file.getUser_id(), file.getName(), file.getDate()));
             model.addAttribute("users", userService.getAll());
             return "admin/files";
@@ -134,16 +131,13 @@ public class Controller {
 
     }
     @GetMapping("/sort")
-    public String sort(@RequestParam(value = "field") String field, Model model) {
-
-        System.out.println("_---------" + field);
-        if (userService.getUserByUsername(getCurrentUsername()).getRole().equals("ROLE_USER")) {
+    public String sort(@RequestBody String field, Model model) {
+        String fieldNew = field.replaceAll("\"", "");
+        if (userService.getUserByUsername(getCurrentUsername()).getRole().equals("USER")) {
             return "403";
         }
 
-
-
-        model.addAttribute("files",fileRepository.sort(0,field));
+        model.addAttribute("files",fileRepository.sort(0,fieldNew));
         model.addAttribute("users", userService.getAll());
 
         return "admin/files";

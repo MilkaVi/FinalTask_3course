@@ -7,13 +7,20 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import se.config.jwt.JWTAuthorizationFilter;
 import se.config.jwt.JWTauthenFilter;
 import se.service.CustomUserDetailsService;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 @EnableWebSecurity
@@ -40,35 +47,35 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);// нет сессии
 
-//        http
-//                .formLogin()
-//                .loginPage("/login")
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .logoutUrl("/doLogout")
-//                .logoutSuccessUrl("/logout_success")
-//                .permitAll();
-//
-//        http    .formLogin()
-//                .successForwardUrl("/login_success_handler");
-//
-//        http    .formLogin()
-//                .failureForwardUrl("/login_failure_handler");
-//
-//        http.logout()
-//                .logoutSuccessHandler(new LogoutSuccessHandler() {
-//
-//                    @Override
-//                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
-//                                                Authentication authentication)
-//                            throws IOException, ServletException {
-//
-//                        System.out.println("This user logged out: " + authentication.getName());
-//
-//                        response.sendRedirect("/logout_success");
-//                    }
-//                });
+        http
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/doLogout")
+                .logoutSuccessUrl("/logout_success")
+                .permitAll();
+
+        http    .formLogin()
+                .successForwardUrl("/login_success_handler");
+
+        http    .formLogin()
+                .failureForwardUrl("/login_failure_handler");
+
+        http.logout()
+                .logoutSuccessHandler(new LogoutSuccessHandler() {
+
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
+                                                Authentication authentication)
+                            throws IOException, ServletException {
+
+                        System.out.println("This user logged out: " + authentication.getName());
+
+                        response.sendRedirect("/logout_success");
+                    }
+                });
     }
 
     @Override
