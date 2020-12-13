@@ -1,10 +1,7 @@
 package se.repository;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import se.Mapping.UserMapping;
 import se.config.BDconfig;
 import se.domain.User;
@@ -20,21 +17,17 @@ public class UserRepositoryImpl implements UserRepository {
     private JdbcTemplate jdbcTemplate = a.getBean("jdbc", JdbcTemplate.class);
 
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     public UserRepositoryImpl() {
         String sql = "SELECT * FROM usr";
         users.addAll(jdbcTemplate.query(sql, new UserMapping()));// UserMapping()- явно указать как парсить
     }
 
 
-
     public void save(User user) {
         user.setRole("USER");
         jdbcTemplate.update(
                 "INSERT INTO usr (login, password, role) VALUES ( ?, ?, ?)",
-                 user.getLogin(), user.getPassword(), user.getRole()
+                user.getLogin(), user.getPassword(), user.getRole()
         );
 
         users.add(user);
@@ -47,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> getAll() {
         List<User> user = new ArrayList<User>();
         String sql = "SELECT * FROM usr";
-        user.addAll(jdbcTemplate.query(sql, new UserMapping()));// UserMapping()- явно указать как парсить
+        user.addAll(jdbcTemplate.query(sql, new UserMapping()));
         return user;
     }
 
@@ -83,7 +76,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Integer getId(User user) {
-        String sql = "select * from usr where login = '" + user.getLogin()+ "'";
+        String sql = "select * from usr where login = '" + user.getLogin() + "'";
 
         if (jdbcTemplate.query(sql, new UserMapping()).isEmpty())
             return null;
@@ -92,7 +85,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User getUserByUsername(String username) {
-        String sql = "select * from usr where login = '" + username+ "'";
+        String sql = "select * from usr where login = '" + username + "'";
         if (jdbcTemplate.query(sql, new UserMapping()).isEmpty())
             return null;
         return jdbcTemplate.queryForObject(sql, new UserMapping());

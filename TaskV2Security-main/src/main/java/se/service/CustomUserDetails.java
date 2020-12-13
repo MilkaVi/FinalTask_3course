@@ -17,11 +17,9 @@ public class CustomUserDetails implements UserDetails {
 
     public static CustomUserDetails fromUserEntityToCustomUserDetails(User userEntity) {
         CustomUserDetails c = new CustomUserDetails();
-        System.out.println("        @@@" + userEntity.getLogin());
         c.login = userEntity.getLogin();
         c.password = userEntity.getPassword();
         c.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole()));
-        System.out.println("grantedAuthorities " + c.grantedAuthorities);
         return c;
     }
 

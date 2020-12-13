@@ -31,7 +31,6 @@ public class FileRepositoryImpl implements FileRepository {
 
     public void delete(Integer id) {
         jdbcTemplate.update("delete from file where id = ?", id);
-        //files.remove(file);
     }
 
     public List<File> getAll() {
@@ -55,9 +54,6 @@ public class FileRepositoryImpl implements FileRepository {
     }
 
     public void update(Integer id, Integer user_id, String name, String date) {
-
-
-        System.out.println("id " + id + " new_file_id " + user_id + " name" + name + "date" + date);
 
         jdbcTemplate.update("update file set name = ?, date = ?, user_id = ? where id = ?", name, date, user_id, id);
 

@@ -26,23 +26,19 @@ public class Authorization {
 
     @PostMapping("/login_success_handler")
     public String loginSuccessHandler(@RequestBody @Valid User user,
-                                              Model model) {
+                                      Model model) {
 
         User userEntity = null;
         try {
             userEntity = users.getByLogPass(user.getLogin(), user.getPassword());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("no user in data base");
         }
-        if(userEntity == null)
-             return "registration";
-
+        if (userEntity == null)
+            return "registration";
 
         model.addAttribute("token", "jopa");
         return "welcome";
-
-
     }
 
     @GetMapping("/login_failure_handler")
@@ -59,10 +55,8 @@ public class Authorization {
 
     @GetMapping("/logout_success")
     public String logout_success() {
-
         return "logout_success";
     }
-
 
 
     @GetMapping("/login")
@@ -74,7 +68,6 @@ public class Authorization {
 
     @GetMapping("/registration")
     public String registration(Model model) {
-
         model.addAttribute("user", new User());
         return "registration";
     }
@@ -84,7 +77,6 @@ public class Authorization {
     public String addUser(@RequestBody @Valid User user, BindingResult bindingResult,
                           Model model) {
 
-        System.out.println("registration!!!  " + user.getLogin() + " " + user.getPassword());
         if (users.getUserByUsername(user.getLogin()) != null) {
             model.addAttribute("error", "username is already exist");
             return "registration";

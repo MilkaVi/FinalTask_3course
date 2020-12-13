@@ -31,14 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .password(myUser.getPassword())
                 .roles(myUser.getRole())
                 .build();
-        System.out.println("userDet " + user);
         return user;
-        //return new org.springframework.security.core.userdetails.User(myUser.getLogin(), myUser.getPassword(), emptyList());
     }
 
-//    @Override
-//    public  CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        User userEntity = userService.getUserByUsername(username);
-//        return CustomUserDetails.fromUserEntityToCustomUserDetails(userEntity);
-//    }
 }

@@ -4,10 +4,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import se.domain.Doc;
 import se.domain.File;
 import se.service.FileService;
 import se.service.FileServiceImpl;
@@ -18,7 +16,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Optional;
 
 @org.springframework.stereotype.Controller
 public class Controller {
@@ -26,9 +23,6 @@ public class Controller {
     static UserService userService = new UserServiceImpl();
 
     public String getCurrentUsername() {
-        //to obtains a user name
-        //получение jwt при каждом запросе
-        //проверка по jwt
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
     }
@@ -48,7 +42,7 @@ public class Controller {
 
 
     @PostMapping("/doc")
-        public String handleFileUpload(@ModelAttribute MultipartFile multipartFile){
+    public String handleFileUpload(@ModelAttribute MultipartFile multipartFile) {
         System.out.println("file " + multipartFile);
         return "redirect:/files";
     }
@@ -68,22 +62,16 @@ public class Controller {
 
 
     @PostMapping("/files")
-    public  String addNewOrder(
-            //@RequestBody @Valid File file,
+    public String addNewOrder(
             @RequestParam MultipartFile file1,
             @ModelAttribute File file,
-            Errors errors,
-
-                                Model model) throws IOException {
-        System.out.println("file1" +file1);
-
+            Errors errors, Model model) throws IOException {
 
         file.setContent(file1.getBytes());
 
         if (errors.hasErrors()) {
             return "redirect:/addNewFile";
         }
-
 
         int user_id = userService.getUserByUsername(getCurrentUsername()).getId();
         file.setFile_user(user_id);
@@ -110,7 +98,7 @@ public class Controller {
     public String update(@RequestBody @Valid File file,
                          Errors errors, @PathVariable("id") int id,
                          Model model) {
-         if (userService.getUserByUsername(getCurrentUsername()).getId() != fileRepository.getById(id).getFile_user()) {
+        if (userService.getUserByUsername(getCurrentUsername()).getId() != fileRepository.getById(id).getFile_user()) {
 
             return "403";
         }
@@ -129,19 +117,17 @@ public class Controller {
     @DeleteMapping("/files/{id}")
     public String delete(@PathVariable("id") int id, Model model) {
 
-
         if (userService.getUserByUsername(getCurrentUsername()).getId() != fileRepository.getById(id).getFile_user()) {
 
             return "403";
         }
-                fileRepository.delete(id);
+        fileRepository.delete(id);
         return "redirect:/files";
-
     }
 
     @GetMapping("/select")
-    public String getOrderFilter( @RequestBody File file,
-                               Model model) {
+    public String getOrderFilter(@RequestBody File file,
+                                 Model model) {
         int user_id = userService.getUserByUsername(getCurrentUsername()).getId();
         if (userService.getUserByUsername(getCurrentUsername()).getRole().equals("USER")) {
             model.addAttribute("files", fileRepository.select(0, file.getUser_id(), file.getName(), file.getDate()));
@@ -153,6 +139,7 @@ public class Controller {
         }
 
     }
+
     @GetMapping("/sort")
     public String sort(@RequestBody String field, Model model) {
         String fieldNew = field.replaceAll("\"", "");
@@ -160,7 +147,7 @@ public class Controller {
             return "403";
         }
 
-        model.addAttribute("files",fileRepository.sort(0,fieldNew));
+        model.addAttribute("files", fileRepository.sort(0, fieldNew));
         model.addAttribute("users", userService.getAll());
 
         return "admin/files";
@@ -169,20 +156,19 @@ public class Controller {
     @GetMapping("/download/{id}")
     public void downloadFile(@PathVariable("id") int id, HttpServletResponse response) throws Exception {
 
-        File file=fileRepository.getById(id);
+        File file = fileRepository.getById(id);
 
         response.setContentType("application/octet-stream");
-        String headerKey="Content-Disposition";
-        String headerValue="attachment; filename="+file.getName();
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=" + file.getName();
 
         response.setHeader(headerKey, headerValue);
 
-        ServletOutputStream outputStream= response.getOutputStream();
+        ServletOutputStream outputStream = response.getOutputStream();
 
         outputStream.write(file.getContent());
         outputStream.close();
     }
-
 
 
 }
