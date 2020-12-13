@@ -27,7 +27,11 @@
 
     <tr th:each="file : ${files}">
         <td th:utext="${file.getUser_id()}"></td>
-        <td th:utext="${file.getName()}"></td>
+<!--        <td th:action="@{/download/{id}(d=${file.getId()})}">[[${file.name}]]</td>-->
+        <td>
+            <a th:href="@{/download/{id}(d=${file.getId()})}">[[${file.name}]]</a>
+        </td>
+
         <td th:utext="${file.getDate()}"></td>
         <td>
 

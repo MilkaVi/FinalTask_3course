@@ -6,6 +6,7 @@ import se.Mapping.FileMapping;
 import se.config.BDconfig;
 import se.domain.File;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +21,10 @@ public class FileRepositoryImpl implements FileRepository {
     }
 
 
-    public void save(File file) {
+    public void save(File file){
         jdbcTemplate.update(
-                "INSERT INTO file (user_id, name, date, file_user) VALUES (?, ?, ?, ?)",
-                file.getUser_id(), file.getName(), file.getDate(), file.getFile_user()
+                "INSERT INTO file (user_id, name, date, file_user, content) VALUES (?, ?, ?, ?, ?)",
+                file.getUser_id(), file.getName(), file.getDate(), file.getFile_user(), file.getContent()
         );
         files.add(file);
     }

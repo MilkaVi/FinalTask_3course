@@ -4,13 +4,14 @@ import se.domain.File;
 import se.repository.FileRepository;
 import se.repository.FileRepositoryImpl;
 
+import java.io.IOException;
 import java.util.List;
 
 public class FileServiceImpl implements FileService {
 
     private FileRepository fileRepository = new FileRepositoryImpl();
 
-    public void save(File file) {
+    public void save(File file) throws IOException {
         if(file!=null) {
             fileRepository.save(file);
         }

@@ -1,7 +1,10 @@
 
 package se.domain;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.*;
+import java.util.Arrays;
 
 public class File {
     private Integer id;
@@ -11,6 +14,7 @@ public class File {
     private Integer user_id;
 
 
+    private byte[] content;
     @NotBlank
     @Size(min=1,message = "min 1 characters")
     private String name;
@@ -60,10 +64,20 @@ public class File {
         this.date = date;
     }
 
+    public byte[] getContent() {
+        return content;
+    }
+
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
+
     @Override
     public String toString() {
         return "File{" +
                 "id=" + id +
+                ", user_id=" + user_id +
+                ", content=" + Arrays.toString(content) +
                 ", name='" + name + '\'' +
                 ", date='" + date + '\'' +
                 ", file_user=" + file_user +

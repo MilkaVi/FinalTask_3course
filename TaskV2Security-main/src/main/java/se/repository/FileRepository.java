@@ -2,11 +2,12 @@ package se.repository;
 
 import se.domain.File;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface FileRepository {
 
-    void save(File order);
+    void save(File order) throws IOException;
 
     void delete(Integer id);
 

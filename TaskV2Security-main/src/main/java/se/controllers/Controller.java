@@ -1,19 +1,24 @@
 package se.controllers;
 
-import org.apache.catalina.connector.Request;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import se.domain.Doc;
 import se.domain.File;
 import se.service.FileService;
 import se.service.FileServiceImpl;
 import se.service.UserService;
 import se.service.UserServiceImpl;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Optional;
 
 @org.springframework.stereotype.Controller
 public class Controller {
@@ -42,6 +47,13 @@ public class Controller {
     }
 
 
+    @PostMapping("/doc")
+        public String handleFileUpload(@ModelAttribute MultipartFile multipartFile){
+        System.out.println("file " + multipartFile);
+        return "redirect:/files";
+    }
+
+
     @GetMapping("/files")
     public String getOrderPage(Model model) {
         return distribute(model);
@@ -56,11 +68,22 @@ public class Controller {
 
 
     @PostMapping("/files")
-    public String addNewOrder(@RequestBody @Valid File file, Errors errors,
-                              Model model) {
+    public  String addNewOrder(
+            //@RequestBody @Valid File file,
+            @RequestParam MultipartFile file1,
+            @ModelAttribute File file,
+            Errors errors,
+
+                                Model model) throws IOException {
+        System.out.println("file1" +file1);
+
+
+        file.setContent(file1.getBytes());
+
         if (errors.hasErrors()) {
-            return "addNewFile";
+            return "redirect:/addNewFile";
         }
+
 
         int user_id = userService.getUserByUsername(getCurrentUsername()).getId();
         file.setFile_user(user_id);
@@ -142,6 +165,24 @@ public class Controller {
 
         return "admin/files";
     }
+
+    @GetMapping("/download/{id}")
+    public void downloadFile(@PathVariable("id") int id, HttpServletResponse response) throws Exception {
+
+        File file=fileRepository.getById(id);
+
+        response.setContentType("application/octet-stream");
+        String headerKey="Content-Disposition";
+        String headerValue="attachment; filename="+file.getName();
+
+        response.setHeader(headerKey, headerValue);
+
+        ServletOutputStream outputStream= response.getOutputStream();
+
+        outputStream.write(file.getContent());
+        outputStream.close();
+    }
+
 
 
 }
